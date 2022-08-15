@@ -409,7 +409,7 @@
 .uploadBox .upload-demo {
   display: inline-block;
   width: 49%;
-  float: left;
+  float: none;
   text-align: center;
 }
 
