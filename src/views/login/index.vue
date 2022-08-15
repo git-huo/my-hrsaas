@@ -23,7 +23,7 @@
           <svg-icon :icon-class="passwordType==='password'? 'eye':'eye-open'" />
         </span>
       </el-form-item>
-      <el-button type="primary" style="width:100%;margin-bottom:30px;" @click.native.prevent="Login">登陆</el-button>
+      <el-button :loading="loading" type="primary" style="width:100%;margin-bottom:30px;" @click="Login">登陆</el-button>
 
       <div class="tips">
         <span style="margin-right:20px;">账号: 13800000002</span>
@@ -51,6 +51,7 @@ export default {
         mobile: '13800000002',
         password: '123456'
       },
+      loading: false,
       rules: {
         mobile: [
           {
@@ -85,8 +86,13 @@ export default {
     async Login() {
       try {
         await this.$refs.loginForm.validate() // promise
+        this.loading = true
+        await this.$store.dispatch('user/login', this.loginForm)
+        this.$router.push('./')
       } catch (error) {
         console.log(error)
+      } finally {
+        this.loading = false
       }
     }
   }
