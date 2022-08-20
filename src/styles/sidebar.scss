@@ -90,10 +90,13 @@
       }
     }
   }
-
+  .sidebar-container {
+    background: -webkit-linear-gradient(bottom, #3d6df8, #5b8cff);
+  }
   .hideSidebar {
     .sidebar-container {
       width: 54px !important;
+
     }
 
     .main-container {

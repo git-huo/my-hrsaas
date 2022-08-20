@@ -1,6 +1,12 @@
 <template>
   <div class="login-container">
-    <el-form ref="loginForm" class="login-form" label-position="left" :rules="rules" :model="loginForm">
+    <el-form
+      ref="loginForm"
+      class="login-form"
+      label-position="left"
+      :model="loginForm"
+      :rules="rules"
+    >
 
       <div class="title-container">
         <h3 class="title">
@@ -9,27 +15,38 @@
       </div>
       <!-- svg-container -->
       <el-form-item prop="mobile">
-        <span
-          class="svg-container el-icon-user-solid"
-        />
+        <span class="svg-container">
+          <svg-icon icon-class="user" />
+        </span>
         <el-input v-model="loginForm.mobile" placeholder="请输入手机号码" />
       </el-form-item>
       <el-form-item prop="password">
         <span class="svg-container">
           <svg-icon icon-class="password" />
         </span>
-        <el-input ref="pwd" v-model="loginForm.password" :type="passwordType" placeholder="请输入密码" />
-        <span class="svg-container" @click="showPwd">
-          <svg-icon :icon-class="passwordType==='password'? 'eye':'eye-open'" />
+        <el-input ref="pwdInput" v-model="loginForm.password" :type="passwordType" placeholder="请输入密码" />
+        <span class="svg-container">
+          <!-- passwordType 为 password  icon-class="eye"
+          passwordType 为 ''  icon-class="eye-open" -->
+          <svg-icon
+            :icon-class="`${passwordType=== 'password'?'eye':'eye-open'}`"
+            @click="changePwd"
+          />
         </span>
       </el-form-item>
-      <el-button :loading="loading" type="primary" style="width:100%;margin-bottom:30px;" @click="Login">登陆</el-button>
+
+      <el-button
+        :loading="loading"
+        type="primary"
+        class="loginBtn"
+        style="width:100%;margin-bottom:30px;"
+        @click="login"
+      >Login</el-button>
 
       <div class="tips">
         <span style="margin-right:20px;">账号: 13800000002</span>
         <span> 密码: 123456</span>
       </div>
-
     </el-form>
   </div>
 </template>
@@ -39,58 +56,72 @@ import { valiMobile } from '@/utils/validate'
 export default {
   name: 'Login',
   data() {
-    const validateMobile = (rule, value, callback) => {
+    const validatorMoblie = (rule, value, callback) => {
       if (valiMobile(value)) {
         return callback()
       }
-      return callback(new Error('手机格式不对'))
+      return callback(new Error('手机号格式不对'))
     }
     return {
-      passwordType: 'password',
+      passwordType: 'password', //
       loginForm: {
         mobile: '13800000002',
         password: '123456'
       },
       loading: false,
+      // 手机号 必填 格式 按照国家要求来
+      // 密码 必填 程度6，16
+
+      // 手机号码格式的校验 用 validator 再 实现一次
+      // 可以将验证手机号码抽取出来，放在utils的validate.js文件里
       rules: {
         mobile: [
-          {
-            require: true, message: '手机号必填', trigger: 'blur'
-          },
-          {
-            validator: validateMobile, trigger: 'blur'
-          }
-          // {
-          //   pattern: /^(?:(?:\+|00)86)?1(?:(?:3[\d])|(?:4[5-79])|(?:5[0-35-9])|(?:6[5-7])|(?:7[0-8])|(?:8[\d])|(?:9[189]))\d{8}$/,
-          //   message: '手机格式不对'
-          // }
+          { required: true, message: '手机号必填', trigger: 'blur' },
+          { validator: validatorMoblie, trigger: 'blur' }
+          // { pattern: /^(?:(?:\+|00)86)?1(?:(?:3[\d])|(?:4[5-79])|(?:5[0-35-9])|(?:6[5-7])|(?:7[0-8])|(?:8[\d])|(?:9[189]))\d{8}$/, message: '手机号格式不对', trigger: 'blur' }
         ],
         password: [
-          {
-            require: true, message: '密码必填', trigger: 'blur'
-          },
-          {
-            min: 6, max: 16, message: '密码不正确', trigger: 'blur'
-          }
+          { required: true, message: '密码必填', trigger: 'blur' },
+          { min: 6, max: 16, message: '密码不正确', trigger: 'blur' }
         ]
       }
     }
   },
   methods: {
-    showPwd() {
-      this.passwordType === 'password' ? this.passwordType = '' : this.passwordType = 'password'
+    // 切换密码框的type值
+    // 眼睛要修改
+    // 输入框focus
+    changePwd() {
+      this.passwordType === 'password'
+        ? this.passwordType = '' : this.passwordType = 'password'
+
+      // 输入框focus
       this.$nextTick(() => {
-        this.$refs.loginForm.focus()
+        this.$refs.pwdInput.focus()
       })
     },
-    async Login() {
+    async login() {
+      // 校验表单数据
+      // form 的 validate
+      // this.$refs.loginForm.validate((vali) => {
+      //   console.log(vali)
+      //   if (vali) {
+      //     // 提交数据的操作
+      //   }
+      // })
+
+      // 完善 点击 loading的状态
       try {
-        await this.$refs.loginForm.validate() // promise
+        await this.$refs.loginForm.validate()// promise
         this.loading = true
+        // 提交数据的操作
         await this.$store.dispatch('user/login', this.loginForm)
-        this.$router.push('./')
-      } catch (error) {
-        console.log(error)
+        // this.loading = false
+        // 如何实现页面跳转
+        this.$router.push('/')
+      } catch (e) {
+        console.log(e)
+        // this.loading = false
       } finally {
         this.loading = false
       }
@@ -115,8 +146,6 @@ $cursor: #fff;
 
 /* reset element-ui css */
 .login-container {
-  background-image: url('~@/assets/common/login.jpg');
-  background-position: center;
   .el-input {
     display: inline-block;
     height: 47px;
@@ -146,8 +175,8 @@ $cursor: #fff;
     border-radius: 5px;
     color: #454545;
   }
-   .el-form-item__error {
-    color: #fff
+  .el-form-item__error{
+    color: #fff;
   }
 }
 </style>
@@ -162,6 +191,8 @@ $light_gray:#68b0fe;
   width: 100%;
   background-color: $bg;
   overflow: hidden;
+  background-image: url('~@/assets/common/login.jpg');
+  background-position: center;
 
   .login-form {
     position: relative;
@@ -214,10 +245,10 @@ $light_gray:#68b0fe;
     user-select: none;
   }
   .loginBtn {
-  background: #407ffe;
-  height: 64px;
-  line-height: 32px;
-  font-size: 24px;
-}
+    background: #407ffe;
+    height: 64px;
+    line-height: 32px;
+    font-size: 24px;
+  }
 }
 </style>

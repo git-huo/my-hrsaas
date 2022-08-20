@@ -11,12 +11,17 @@ import App from './App'
 import store from './store'
 import router from './router'
 
+import * as directives from '@/directives'
+
 import '@/icons' // icon
 import '@/permission' // permission control
 Vue.use(ElementUI)
 Vue.use(componentsns)
 Vue.config.productionTip = false
-
+Object.keys(directives).forEach(key => {
+  // 注册自定义指令
+  Vue.directive(key, directives[key])
+})
 new Vue({
   el: '#app',
   router,
