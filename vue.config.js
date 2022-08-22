@@ -38,7 +38,7 @@ module.exports = {
     },
     proxy: {
       '/api': {
-        target: 'http://42.192.129.12:3001', // 请求跨域地址
+        target: 'http://42.192.129.12:3001/', // 请求跨域地址
         changeOrigin: true // 只有这个值为true的情况下 才表示开启跨域
       }
     }
