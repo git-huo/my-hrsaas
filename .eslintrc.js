@@ -5,6 +5,7 @@ module.exports = {
     sourceType: 'module'
   },
   env: {
+    
     browser: true,
     node: true,
     es6: true,
@@ -18,7 +19,8 @@ module.exports = {
       "singleline": 10,
       "multiline": {
         "max": 1,
-        "allowFirstLine": false
+        "allowFirstLine": false,
+        // "vue/require-default-prop":false
       }
     }],
     

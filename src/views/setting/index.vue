@@ -84,10 +84,12 @@
 import { mapGetters } from 'vuex'
 import roleDialog from '@/views/setting/components/roleDialog.vue'
 import { getRoleList, deleteRole, getCompanyInfo } from '@/api/setting'
+
 export default {
   name: 'Hrsaas1Index',
   components: {
     roleDialog
+
   },
   data() {
     return {

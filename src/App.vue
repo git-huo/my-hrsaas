@@ -1,5 +1,6 @@
 <template>
   <div id="app">
+    <!-- <PageTools /> -->
     <router-view />
     <!-- 21312321
     <TestIndex />

@@ -3,8 +3,6 @@ import store from '@/store'
 import { Message } from 'element-ui'
 import router from '@/router'
 const timeout = 3600
-
-// 定义超时时间
 function isCheckOut() {
   return (Date.now() - store.getters.hrsaasTime) / 1000 > timeout
 }
